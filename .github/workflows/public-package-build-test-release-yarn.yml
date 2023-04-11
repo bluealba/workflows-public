@@ -56,11 +56,11 @@ jobs:
         run: yarn run build --if-present
 
       - name: Create release package
-        if: contains("refs/heads/release", github.ref) || contains("refs/head/hotfix", github.ref)
+        if: contains('refs/heads/release', github.ref) || contains('refs/head/hotfix', github.ref)
         run: yarn pack
 
 
       - name: Publish package
-        if: contains("refs/heads/release", github.ref) || contains("refs/head/hotfix", github.ref)
+        if: contains('refs/heads/release', github.ref) || contains('refs/head/hotfix', github.ref)
         run: |
           yarn publish
