@@ -38,6 +38,10 @@ jobs:
           repository: bluealba/workflows-public
           path: pipeline/
 
+      - name: Check where the files are 
+        run: |
+          ls -ltR /home/runner/work/*
+
       - name: Render npmrc file
         uses: nowactions/envsubst@v1
         with:
