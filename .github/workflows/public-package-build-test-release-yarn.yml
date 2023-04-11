@@ -1,0 +1,66 @@
+name: Build publish and test a public NPM package
+
+on: 
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone the repo
+        uses: actions/checkout@v3
+
+      - name: Get Node version from package.json
+        id: nodeVersion
+        uses: sergeysova/jq-action@v2
+        with:
+          cmd: jq -r '.engines.node' package.json
+
+      - name: Install and set-up Node.js ${{ steps.nodeVersion.outputs.value }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ steps.nodeVersion.outputs.value }}
+
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v4
+
+      - name: Documentate tools version 
+        run: |
+          echo -n 'Node version  ' && node -v
+          echo -n 'NPM version  ' && npm -v
+          echo -n 'Yarn version '  && yarn -v
+
+      - name: Clone workflows repo to get npmrc 
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: bluealba/workflows-public
+          path: pipeline/
+
+      - name: Render npmrc file
+        uses: nowactions/envsubst@v1
+        with:
+          input: /home/runner/work/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/pipeline/files/bluealba/publish_npmrc
+          output: ./.npmrc
+        env:
+          BLUEALBA_NPMJS_AUTH_TOKEN : ${{ secrets.BLUEALBA_NPMJS_AUTH_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Test service 
+        run: yarn run test --if-present
+
+      - name: Build service 
+        run: yarn run build --if-present
+
+      - name: Create release package
+        if: contains(fromJson('["refs/heads/release", "refs/heads/feature", "refs/head/hotfix"]'), github.ref)
+        run: yarn pack
+
+      # Log into BA Artifactory
+      - name: Login to BA Artifactory
+        if: contains(fromJson('["refs/heads/release", "refs/heads/feature", "refs/head/hotfix"]'), github.ref)
+        run: |
+          yarn publish
