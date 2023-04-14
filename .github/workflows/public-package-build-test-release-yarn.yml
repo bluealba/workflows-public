@@ -17,10 +17,10 @@ jobs:
         with:
           cmd: jq -r '.engines.node' package.json
 
-      - name: Install and set-up Node.js ${{ steps.nodeVersion.outputs.value }}
+      - name: Autodetect and set-up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ steps.nodeVersion.outputs.value }}
+          node-version-file: '.build-node-version'
 
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v4
