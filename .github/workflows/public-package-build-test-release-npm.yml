@@ -40,7 +40,9 @@ jobs:
           BA_NPMJS_AUTH_TOKEN : ${{ secrets.BA_NPMJS_AUTH_TOKEN }}
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cat .npmrc
+          npm install
 
       - name: Test service 
         run: npm run test --if-present
