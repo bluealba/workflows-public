@@ -44,7 +44,7 @@ jobs:
           input: /home/runner/work/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/pipeline/files/bluealba/publish_npmrc
           output: ./.npmrc
         env:
-          BLUEALBA_NPMJS_AUTH_TOKEN : ${{ secrets.BLUEALBA_NPMJS_AUTH_TOKEN }}
+          BA_NPMJS_AUTH_TOKEN : ${{ secrets.BA_NPMJS_AUTH_TOKEN }}
 
       - name: Install dependencies
         run: yarn install
