@@ -51,10 +51,10 @@ jobs:
         run: npm run build --if-present
 
       - name: Create release package
-        if: contains(github.ref ,'refs/heads/release') || contains(github.ref ,'refs/heads/hotfix') || contains(github.ref ,'refs/heads/master')
+        if: contains(github.ref ,'refs/heads/release') || contains(github.ref ,'refs/heads/hotfix') || contains(github.ref ,'refs/heads/master') || contains(github.ref ,'refs/heads/main')
         run: npm pack
 
       - name: Publish package
-        if: contains(github.ref ,'refs/heads/release') || contains(github.ref ,'refs/heads/hotfix') || contains(github.ref ,'refs/heads/master')
+        if: contains(github.ref ,'refs/heads/release') || contains(github.ref ,'refs/heads/hotfix') || contains(github.ref ,'refs/heads/master') || contains(github.ref ,'refs/heads/main')
         run: |
           npm publish
