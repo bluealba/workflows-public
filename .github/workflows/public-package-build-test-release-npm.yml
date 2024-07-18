@@ -57,4 +57,5 @@ jobs:
       - name: Publish package
         if: contains(github.ref ,'refs/heads/release') || contains(github.ref ,'refs/heads/hotfix') || contains(github.ref ,'refs/heads/master') || contains(github.ref ,'refs/heads/main')
         run: |
+          npm config set access public
           npm publish
