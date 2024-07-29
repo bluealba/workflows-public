@@ -2,6 +2,12 @@ name: Build publish and test a public NPM package
 
 on: 
   workflow_call:
+    inputs:
+
+      publish:
+        required: false
+        type: boolean
+        default: 'true'
 
 jobs:
   build:
@@ -55,7 +61,7 @@ jobs:
         run: npm pack
 
       - name: Publish package
-        if: contains(github.ref ,'refs/heads/release') || contains(github.ref ,'refs/heads/hotfix') || contains(github.ref ,'refs/heads/master') || contains(github.ref ,'refs/heads/main')
+        if: ${{ inputs.publish == 'true' }} && (contains(github.ref ,'refs/heads/release') || contains(github.ref ,'refs/heads/hotfix') || contains(github.ref ,'refs/heads/master') || contains(github.ref ,'refs/heads/main'))
         run: |
           npm config set access public
           npm publish
